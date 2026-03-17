@@ -1,0 +1,65 @@
+{
+  "users": {
+    "doctors": [
+      {
+        "id": "doc_001",
+        "name": "Dr. Sarah Smith",
+        "email": "sarah.smith@careconnect.com",
+        "specialization": "Cardiologist",
+        "department": "Cardiology",
+        "available_slots": ["09:00 AM", "10:00 AM", "02:00 PM"]
+      },
+      {
+        "id": "doc_002",
+        "name": "Dr. James Wilson",
+        "email": "j.wilson@careconnect.com",
+        "specialization": "Pediatrician",
+        "department": "Pediatrics",
+        "available_slots": ["11:00 AM", "01:00 PM", "03:30 PM"]
+      }
+    ],
+    "patients": [
+      {
+        "id": "pat_101",
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "phone": "+1 555-0123",
+        "medical_history_summary": "Hypertension, Seasonal Allergies"
+      },
+      {
+        "id": "pat_102",
+        "name": "Emily Blunt",
+        "email": "emily.b@hotmail.com",
+        "phone": "+1 555-0199",
+        "medical_history_summary": "None"
+      }
+    ],
+    "admins": [
+      {
+        "id": "admin_root",
+        "username": "admin_main",
+        "role": "super_admin"
+      }
+    ]
+  },
+  "appointments": [
+    {
+      "appointment_id": "apt_5001",
+      "doctor_id": "doc_001",
+      "patient_id": "pat_101",
+      "date": "2026-02-15",
+      "time": "09:00 AM",
+      "status": "confirmed",
+      "reason": "Regular heart checkup"
+    },
+    {
+      "appointment_id": "apt_5002",
+      "doctor_id": "doc_002",
+      "patient_id": "pat_102",
+      "date": "2026-02-16",
+      "time": "11:00 AM",
+      "status": "pending",
+      "reason": "Child fever consultation"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - CareConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f1f5f9;
+        }
+
+        .admin-card {
+            border-top: 4px solid #334155;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-heart-pulse"></i>
+            Care<span>Connect</span>
+        </a>
+        <a href="index.html" class="btn btn-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    </nav>
+    <div class="login-container">
+        <div class="card login-card animate-fade-in admin-card">
+            <div class="login-header">
+                <div class="role-icon"
+                    style="width: 70px; height: 70px; font-size: 2rem; margin: 0 auto 1rem auto; color: #334155; background: #e2e8f0;">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h2>Admin Panel</h2>
+                <p class="text-muted">Restricted access. Authorized personnel only.</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="admin-user" class="form-label">Admin Username</label>
+                    <input type="text" id="admin-user" class="form-input" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div id="error-msg" style="color: #ef4444; font-size: 0.875rem; display: none; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-circle-exclamation"></i> Invalid admin credentials.
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #334155;">Access
+                    Dashboard</button>
+            </form>
+            <div class="register-prompt" style="margin-top: 2rem;">
+                <p>Test Creds: <strong>admin</strong> / <strong>admin123</strong></p>
+            </div>
+        </div> 
+    </div>
+    <script src="data.js"></script>
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if (user === 'admin' && pass === 'admin123') {
+                // ADDED: Session Management
+                loginUser({ name: 'Super Admin', role: 'admin' });
+                window.location.href = 'admin_dashboard.html';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

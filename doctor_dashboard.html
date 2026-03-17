@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - MediCare Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 270px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #1a3a52 0%, #0066cc 100%);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar .logo {
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar .logo span {
+            color: #00a896;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar .nav-link.logout {
+            color: #ff6b6b;
+            margin-top: auto;
+        }
+
+        .sidebar .nav-link.logout:hover {
+            background-color: rgba(255, 107, 107, 0.15);
+            color: #ff8787;
+        }
+
+        .main-content {
+            padding: 2.5rem;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--bg-surface) 0%, #e8f0f8 100%);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            animation: slideInDown 0.5s ease;
+        }
+
+        .header-text h1 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-hospital) 0%, var(--accent-teal) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .profile-info h4 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 5px solid var(--primary-hospital);
+            animation: slideInUp 0.5s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card.stat-2 {
+            border-left-color: var(--accent-orange);
+        }
+
+        .stat-card.stat-3 {
+            border-left-color: var(--success-green);
+        }
+
+        .stat-value {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .icon-blue {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 168, 150, 0.15) 100%);
+            color: var(--primary-hospital);
+        }
+
+        .icon-orange {
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.15) 0%, rgba(255, 156, 0, 0.15) 100%);
+            color: var(--accent-orange);
+        }
+
+        .icon-green {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(0, 168, 150, 0.15) 100%);
+            color: var(--success-green);
+        }
+
+        .table-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            animation: slideInUp 0.5s ease;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-header h3 {
+            color: var(--text-dark);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 1.2rem;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-hospital) 0%, var(--primary-dark) 100%);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .table td {
+            padding: 1.1rem 1.2rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .table tr:hover {
+            background-color: var(--primary-light);
+            transition: all 0.2s ease;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success-green);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 140, 66, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="#" class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M20 8L28 14L28 24C28 28.4183 24.4183 32 20 32C15.5817 32 12 28.4183 12 24V14L20 8Z" stroke="white" stroke-width="2" fill="none"/>
+                    <circle cx="18" cy="18" r="1.5" fill="white"/>
+                    <circle cx="22" cy="18" r="1.5" fill="white"/>
+                    <path d="M18 22C19.1046 22 20 22.8954 20 24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00a896;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                Medi<span>Care</span>
+            </a>
+
+            <nav>
+                <a href="#" class="nav-link active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Appointments</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-user-injured"></i>
+                    <span>My Patients</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-file-medical"></i>
+                    <span>Prescriptions</span>
+                </a>
+                <a href="#" onclick="logoutUser()" class="nav-link logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="header-text">
+                    <h1 id="welcome-msg">Good Morning, Doctor</h1>
+                    <p>Here's your daily medical summary</p>
+                </div>
+                <div class="doctor-profile">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h4 id="profile-name">Dr. Name</h4>
+                        <p id="profile-spec">Specialist</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-value" id="total-apt-count">0</div>
+                        <div class="stat-label">Total Appointments</div>
+                    </div>
+                    <div class="stat-icon icon-blue">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                </div>
+                <div class="stat-card stat-2">
+                    <div>
+                        <div class="stat-value" id="pending-count">0</div>
+                        <div class="stat-label">Pending Reviews</div>
+                    </div>
+                    <div class="stat-icon icon-orange">
+                        <i class="fa-solid fa-hourglass-end"></i>
+                    </div>
+                </div>
+                <div class="stat-card stat-3">
+                    <div>
+                        <div class="stat-value" id="confirmed-count">0</div>
+                        <div class="stat-label">Confirmed</div>
+                    </div>
+                    <div class="stat-icon icon-green">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointments List -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Upcoming Appointments</h3>
+                    <button class="btn btn-link" onclick="renderDoctorDashboard()">
+                        <i class="fa-solid fa-rotate-right"></i> Refresh
+                    </button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointment-list">
+                        <!-- Dynamic Content -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // AUTH CHECK
+        const currentUser = requireAuth('doctor');
+
+        function renderDoctorDashboard() {
+            // Update Header
+            const hour = new Date().getHours();
+            const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
+            document.getElementById('welcome-msg').innerText = `${greeting}, ${currentUser.name}`;
+            document.getElementById('profile-name').innerText = currentUser.name;
+            document.getElementById('profile-spec').innerText = currentUser.specialization;
+
+            // Get Data
+            const appointments = getAppointmentsForDoctor(currentUser.id);
+            const tbody = document.getElementById('appointment-list');
+            tbody.innerHTML = '';
+            let pendingCount = 0;
+            let confirmedCount = 0;
+
+            if (appointments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="fa-solid fa-calendar-xmark"></i></div>
+                                <p>No appointments scheduled yet</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                appointments.forEach(apt => {
+                    if (apt.status === 'pending') pendingCount++;
+                    if (apt.status === 'confirmed') confirmedCount++;
+
+                    const tr = document.createElement('tr');
+
+                    let statusBadge = apt.status === 'confirmed'
+                        ? '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Confirmed</span>'
+                        : '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Pending</span>';
+
+                    let actionBtn = apt.status === 'pending'
+                        ? `<button class="btn btn-primary btn-sm" onclick="handleApprove('${apt.id}')"><i class="fa-solid fa-check"></i> Approve</button>`
+                        : `<button class="btn btn-outline btn-sm" disabled style="opacity: 0.6"><i class="fa-solid fa-check"></i> Approved</button>`;
+
+                    tr.innerHTML = `
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-dark);">${apt.patientName}</div>
+                        </td>
+                        <td><i class="fa-solid fa-clock"></i> ${apt.time}</td>
+                        <td><span style="background: var(--primary-light); padding: 0.3rem 0.7rem; border-radius: 0.5rem; font-size: 0.85rem;">${apt.type}</span></td>
+                        <td>${statusBadge}</td>
+                        <td>${actionBtn}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Update stats
+            document.getElementById('total-apt-count').innerText = appointments.length;
+            document.getElementById('pending-count').innerText = pendingCount;
+            document.getElementById('confirmed-count').innerText = confirmedCount;
+        }
+
+        function handleApprove(id) {
+            if (confirm("Approve this appointment?")) {
+                updateAppointmentStatus(id, 'confirmed');
+                renderDoctorDashboard();
+            }
+        }
+
+        // Init
+        renderDoctorDashboard();
+    </script>
+</body>
+
+</html>

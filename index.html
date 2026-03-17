@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect - Hospital Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Using FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-heart-pulse"></i>
+            Care<span>Connect</span>
+        </a>
+        <div>
+            <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem;">Emergency: 911</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <div class="text-center mb-8 animate-fade-in">
+            <h1 class="mb-4" style="font-size: 2.5rem; font-weight: 700;">Welcome to CareConnect</h1>
+            <p class="text-muted" style="font-size: 1.1rem;">Please select your role to proceed to the secure dashboard.
+            </p>
+        </div>
+
+        <div class="role-grid">
+
+            <!-- Doctor Role -->
+            <a href="doctor_login.html" class="card role-card animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="role-icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <h2>Doctor</h2>
+                <p class="text-muted mb-4">Login to view appointments & patient records</p>
+                <span class="btn btn-outline">Doctor Login</span>
+            </a>
+
+            <!-- Patient Role -->
+            <a href="patient_login.html" class="card role-card animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="role-icon">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </div>
+                <h2>Patient</h2>
+                <p class="text-muted mb-4">Book appointments & view medical history</p>
+                <span class="btn btn-primary">Patient Login</span>
+            </a>
+
+            <!-- Admin Role -->
+            <a href="admin_login.html" class="card role-card animate-fade-in" style="animation-delay: 0.3s;">
+                <div class="role-icon">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h2>Admin</h2>
+                <p class="text-muted mb-4">Manage staff, patients & hospital resources</p>
+                <span class="btn btn-outline">Admin Login</span>
+            </a>
+
+        </div>
+
+    </main>
+
+    <footer class="text-center text-muted" style="margin-top: auto; padding: 2rem;">
+        <p>&copy; 2026 CareConnect Hospital Management System. All rights reserved.</p>
+        <button onclick="resetDB()"
+            style="background: none; border: none; color: #cbd5e1; cursor: pointer; font-size: 0.8rem; margin-top: 1rem;">
+            <i class="fa-solid fa-rotate-right"></i> Reset Demo Data
+        </button>
+    </footer>
+
+    <script src="data.js"></script>
+
+</body>
+
+</html>

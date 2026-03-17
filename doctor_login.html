@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Login - CareConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-heart-pulse"></i>
+            Care<span>Connect</span>
+        </a>
+        <a href="index.html" class="btn btn-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    </nav>
+    <div class="login-container">
+        <div class="card login-card animate-fade-in">
+            <div class="login-header">
+                <div class="role-icon" style="width: 70px; height: 70px; font-size: 2rem; margin: 0 auto 1rem auto;">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <h2>Doctor Portal</h2>
+                <p class="text-muted">Enter your credentials to access the dashboard</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="doctor-email" class="form-label">Email</label>
+                    <input type="text" id="doctor-email" class="form-input" placeholder="e.g. sarah@example.com"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div id="error-msg" style="color: #ef4444; font-size: 0.875rem; display: none; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-circle-exclamation"></i> Invalid email.
+                </div>
+                <button type="submit" class="btn btn-primary">Secure Login</button>
+            </form>
+            <div class="register-prompt">
+                <p>Test Creds: <strong>dr.sarah@hospital.com</strong> / <strong>doc123</strong></p>
+            </div>
+        </div>
+    </div>
+    <script src="data.js"></script>
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('doctor-email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            const db = getDB();
+            // Check both email AND password
+            const doctor = db.users.doctors.find(d => d.email === email && d.password === password);
+            if (doctor) {
+                loginUser({ ...doctor, role: 'doctor' });
+                window.location.href = 'doctor_dashboard.html';
+            } else {
+                errorMsg.style.display = 'block';
+                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Invalid credentials. Try <b>dr.sarah@hospital.com</b> / <b>doc123</b>';
+            }
+        }
+    </script>
+</body>
+</html>

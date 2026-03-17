@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - MediCare Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .patient-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-hospital) 0%, var(--accent-teal) 100%);
+            color: white;
+            padding: 3.5rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            animation: slideInDown 0.5s ease;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-header p {
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .action-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 2px solid transparent;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-hospital);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-hospital) 0%, var(--accent-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .action-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .status-timeline {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .status-timeline h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-left: 3px solid #e2e8f0;
+            padding-left: 2rem;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item:hover {
+            background-color: var(--primary-light);
+            border-radius: 0.5rem;
+            padding-left: 1.8rem;
+            margin-left: 0.2rem;
+        }
+
+        .timeline-item:last-child {
+            border-left: transparent;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -9px;
+            top: 5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-hospital);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary-hospital);
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.3);
+        }
+
+        .timeline-item h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success-green);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 140, 66, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .prescription-item {
+            padding: 1.2rem;
+            border-left: 4px solid var(--primary-hospital);
+            background: var(--primary-light);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .prescription-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .prescription-item strong {
+            color: var(--text-dark);
+            display: block;
+            font-size: 1rem;
+        }
+
+        .prescription-item span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 0.4rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex !important;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            animation: slideInUp 0.3s ease;
+        }
+
+        .modal-content h2 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-select, .form-input, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-select:focus, .form-input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-hospital);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            background-color: var(--primary-light);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 2rem 1rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="patient-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.3rem;">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M20 8L28 14L28 24C28 28.4183 24.4183 32 20 32C15.5817 32 12 28.4183 12 24V14L20 8Z" stroke="white" stroke-width="2" fill="none"/>
+                    <circle cx="18" cy="18" r="1.5" fill="white"/>
+                    <circle cx="22" cy="18" r="1.5" fill="white"/>
+                    <path d="M18 22C19.1046 22 20 22.8954 20 24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00a896;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                Medi<span>Care</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span id="nav-user-name" style="font-weight: 500; color: var(--text-dark);">Guest</span>
+                <button onclick="logoutUser()" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem; width: auto;">
+                    <i class="fa-solid fa-logout"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 id="header-welcome">Welcome back! 👋</h1>
+            <p id="header-id">Patient ID: #000</p>
+        </div>
+
+        <div class="container">
+            <!-- Quick Actions -->
+            <h3 class="mb-6">
+                <i class="fa-solid fa-star"></i> Quick Actions
+            </h3>
+            <div class="action-grid">
+                <div class="action-card" onclick="openBookingModal()">
+                    <div class="action-icon">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+                    <h3>Book Appointment</h3>
+                    <p>Schedule a visit with a doctor</p>
+                </div>
+                <div class="action-card" onclick="togglePrescriptions()">
+                    <div class="action-icon">
+                        <i class="fa-solid fa-prescription-bottle-medical"></i>
+                    </div>
+                    <h3>My Prescriptions</h3>
+                    <p>View your medical records</p>
+                </div>
+            </div>
+
+            <!-- Prescriptions Section -->
+            <div id="rx-section" class="status-timeline" style="display: none; margin-bottom: 2.5rem;">
+                <h3>
+                    <i class="fa-solid fa-file-medical"></i> Prescription History
+                </h3>
+                <div id="rx-list">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Appointment History -->
+            <div class="status-timeline">
+                <h3>
+                    <i class="fa-solid fa-history"></i> Appointment History
+                </h3>
+                <div id="timeline-container">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <h2>
+                <i class="fa-solid fa-calendar-check"></i> Book New Appointment
+            </h2>
+            <form id="bookingForm" onsubmit="handleBooking(event)">
+                <div class="form-group">
+                    <label class="form-label">Select Doctor / Department</label>
+                    <select id="apt-doc" class="form-select" required>
+                        <option value="">-- Choose a Doctor --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preferred Date & Time</label>
+                    <input id="apt-date" type="datetime-local" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reason for Visit</label>
+                    <textarea id="apt-reason" class="form-input" rows="4" required
+                        placeholder="Describe your symptoms or reason for the visit..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" style="width: auto; flex: 1;"
+                        onclick="closeBookingModal()">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="width: auto; flex: 1; background: linear-gradient(135deg, var(--primary-hospital) 0%, var(--primary-dark) 100%);">
+                        <i class="fa-solid fa-check"></i> Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // AUTH CHECK
+        const currentUser = requireAuth('patient');
+
+        function initPatientDashboard() {
+            // Header
+            const firstName = currentUser.name.split(' ')[0];
+            document.getElementById('nav-user-name').innerText = firstName;
+            document.getElementById('header-welcome').innerText = `Welcome back, ${firstName}!`;
+            document.getElementById('header-id').innerText = `Patient ID: #${currentUser.id.split('_')[1]}`;
+
+            // Pre-load doctors into dropdown
+            const docSelect = document.getElementById('apt-doc');
+            const doctors = getAllDoctors();
+            doctors.forEach(doc => {
+                const opt = document.createElement('option');
+                opt.value = doc.id;
+                opt.innerText = `Dr. ${doc.name} (${doc.specialization})`;
+                docSelect.appendChild(opt);
+            });
+
+            refreshTimeline();
+        }
+
+        function refreshTimeline() {
+            const container = document.getElementById('timeline-container');
+            const appointments = getAppointmentsForPatient(currentUser.id);
+
+            container.innerHTML = '';
+            if (appointments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-calendar-xmark"></i>
+                        </div>
+                        <p>No appointments yet. Click "Book Appointment" to schedule one!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show newest first
+            appointments.reverse().forEach(apt => {
+                const docName = getAllDoctors().find(d => d.id === apt.doctorId)?.name || 'Unknown Doctor';
+                const isConfirmed = apt.status === 'confirmed';
+                const badge = isConfirmed 
+                    ? '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Confirmed</span>'
+                    : '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Pending</span>';
+
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div style="width: 100%;">
+                        <h4>${apt.type}</h4>
+                        <p><i class="fa-solid fa-user-doctor"></i> Dr. ${docName}</p>
+                        <p>
+                            <i class="fa-solid fa-calendar"></i> ${apt.time.replace('T', ' ')} 
+                            &nbsp; | &nbsp;
+                            ${badge}
+                        </p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function togglePrescriptions() {
+            const rxDiv = document.getElementById('rx-section');
+            const container = document.getElementById('rx-list');
+
+            if (rxDiv.style.display === 'none') {
+                rxDiv.style.display = 'block';
+                const rx = getPrescriptions(currentUser.id);
+                container.innerHTML = '';
+
+                if (rx.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-prescription-bottle"></i>
+                            </div>
+                            <p>No prescriptions yet</p>
+                        </div>
+                    `;
+                } else {
+                    rx.forEach(r => {
+                        container.innerHTML += `
+                            <div class="prescription-item">
+                                <strong>
+                                    <i class="fa-solid fa-pills"></i> ${r.medicine}
+                                </strong>
+                                <span>
+                                    <i class="fa-solid fa-user-doctor"></i> Dr. ${r.doctorName}
+                                </span>
+                                <span>
+                                    <i class="fa-solid fa-calendar"></i> ${r.date}
+                                </span>
+                            </div>
+                        `;
+                    });
+                }
+            } else {
+                rxDiv.style.display = 'none';
+            }
+        }
+
+        function openBookingModal() {
+            document.getElementById('bookingModal').classList.add('show');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('show');
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+            const docId = document.getElementById('apt-doc').value;
+            const date = document.getElementById('apt-date').value;
+            const reason = document.getElementById('apt-reason').value;
+
+            if (!docId) {
+                alert("Please select a doctor!");
+                return;
+            }
+
+            const doctor = getAllDoctors().find(d => d.id === docId);
+
+            // Save to DB
+            bookAppointment({
+                patientName: currentUser.name,
+                patientId: currentUser.id,
+                doctorId: docId,
+                doctorName: doctor.name,
+                time: date,
+                type: reason
+            });
+
+            alert("✅ Appointment request sent successfully!");
+            closeBookingModal();
+            document.getElementById('bookingForm').reset();
+            refreshTimeline();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('bookingModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBookingModal();
+        });
+
+        initPatientDashboard();
+    </script>
+</body>
+
+</html>
